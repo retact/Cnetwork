@@ -16,11 +16,16 @@ inet_addr()  Conversion to NetworkByteOrder//IPNumber
 hton()  Conversion to NetworkOrder//PortNumber
 */
 
-int main(){
+int main(int argc,char *argv[]){
+  if(argc!=3){
+    printf("Enter your Ip Address and message like this\n client 127.0.0.1 00X0000HOGEHOEGHOGE");
+    exit(0);
+  }
+
   int csocket,bufferlength,recvbuffer;
   struct sockaddr_in server_addr;
   char str_buf[BUFFER_SIZE];
-  char *address = "127.0.0.1";
+  char *address = argv[1];
   //Generate a socket
   if((csocket=socket(AF_INET,SOCK_STREAM,0))<0){
     fprintf(stderr,"Cannot create socket\n");
@@ -39,7 +44,7 @@ int main(){
   }
   printf("Connected\n");
   
-  sprintf(str_buf,"00X0062TTTTTTTTTT");
+  sprintf(str_buf,"%s",argv[2]);
   bufferlength=strlen(str_buf);
 
   //Send a data
