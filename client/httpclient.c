@@ -20,15 +20,21 @@ int main(int argc,char *argv[]){
   struct sockaddr_in server_addr;
   struct hostent *servhost;
   char str_buf[BUFFER_SIZE];
-  char *uribox,host_name[256],file_name[256];
+  char *uribox,host_name[256],file_name[256],host_file[256];
   int loopnum=0;
 
   if(argc<2){
     printf("Make sure you use it correctry:httpclient.exe hostname/filename\r\nAssign command line arguments");
     exit(1);
   }
+  //if include http:// -> separation
+  else if(strstr(argv[1],"http://")&&sscanf(argv[1],"http://%s",host_file)&&strcmp(argv[1],"http://")){
+    argv[1]=host_file;
+    uribox=strstr(argv[1],"/");
+  }else{
+    uribox=strstr(argv[1],"/");
+  }
 
-  uribox=strstr(argv[1],"/");
   if(uribox==NULL){
     printf("NOT found/.\n");
     printf("Make sure you use it correctry:httpclient.exe hostname/filename\n");
@@ -62,6 +68,7 @@ int main(int argc,char *argv[]){
       servhost=gethostbyname(host_name);
       if(servhost==NULL){
         fprintf(stderr,"Not Found Server:%s\n",host_name);
+        exit(1);      
       }
       server_addr.sin_addr.s_addr=*(unsigned int *)servhost->h_addr_list[0];
   }
