@@ -9,10 +9,9 @@
 #include<netdb.h>//network database
 #include<arpa/inet.h>//network control define
 #include<unistd.h>//implementation specific functions
-
 //Set Port Number and Buffer size
 #define PORT_NUMBER 80//HTTP
-#define BUFFER_SIZE 8000
+#define BUFFER_SIZE 80000
 
 
 int main(int argc,char *argv[]){
@@ -87,7 +86,7 @@ int main(int argc,char *argv[]){
     exit(1);
   }
   printf("--Send message\n%s\n",str_buf);
-  strstr(host_name,".html")
+  strcat(host_name,".html");
   fp=fopen(host_name,"w");
   while(1){
     fp=fopen(host_name,"a");
@@ -100,14 +99,14 @@ int main(int argc,char *argv[]){
       fclose(fp);
       exit(1);
     }else if(recvbuffer==0){
+      fprintf(fp,"%s\n",str_buf);
       printf("\n\n--close received\n\n");
       printf("%s\n",str_buf);
-      fprintf(fp,"%s\n",str_buf);
       fflush(stdout);
       break;
     }else{
-      printf("%s",str_buf);
       fprintf(fp,"%s",str_buf);
+      printf("%s",str_buf);
       fflush(stdout);
     }
     close(csocket);
