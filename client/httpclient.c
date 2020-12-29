@@ -22,6 +22,7 @@ int main(int argc,char *argv[]){
   char str_buf[BUFFER_SIZE];
   char *uribox,host_name[256],file_name[256],host_file[256];
   int loopnum=0;
+  FILE *fp;//add file
 
   if(argc<2){
     printf("Make sure you use it correctry:httpclient.exe hostname/filename\r\nAssign command line arguments");
@@ -86,25 +87,31 @@ int main(int argc,char *argv[]){
     exit(1);
   }
   printf("--Send message\n%s\n",str_buf);
-
+  strstr(host_name,".html")
+  fp=fopen(host_name,"w");
   while(1){
+    fp=fopen(host_name,"a");
     loopnum++;
     printf("\n\n--Top of while()loop(%d)\n\n",loopnum);
     memset(str_buf,'\0',BUFFER_SIZE);
     if((recvbuffer=recv(csocket,str_buf,BUFFER_SIZE,0))<0){
       fprintf(stderr,"Cannot receive message\n");
       close(csocket);
+      fclose(fp);
       exit(1);
     }else if(recvbuffer==0){
       printf("\n\n--close received\n\n");
       printf("%s\n",str_buf);
+      fprintf(fp,"%s\n",str_buf);
       fflush(stdout);
       break;
     }else{
       printf("%s",str_buf);
+      fprintf(fp,"%s",str_buf);
       fflush(stdout);
     }
     close(csocket);
+    fclose(fp);
     return(0);
   }
 }
