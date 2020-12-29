@@ -3,16 +3,17 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include<sys/types.h>
-#include<sys/socket.h>
-#include<netinet/in.h>
-#include<netdb.h>
-#include<arpa/inet.h>
-#include<unistd.h>
+#include<sys/types.h>//_LP64,_ILP32
+#include<sys/socket.h>//socket interface
+#include<netinet/in.h>//internet,protocol,family
+#include<netdb.h>//network database
+#include<arpa/inet.h>//network control define
+#include<unistd.h>//implementation specific functions
 
 //Set Port Number and Buffer size
-#define PORT_NUMBER 80
+#define PORT_NUMBER 80//HTTP
 #define BUFFER_SIZE 8000
+
 
 int main(int argc,char *argv[]){
   int csocket,bufferlength,recvbuffer,str_len;
@@ -23,7 +24,7 @@ int main(int argc,char *argv[]){
   int loopnum=0;
 
   if(argc<2){
-    printf("Make sure you use it correctry:httpclient.exe hostname/filename\n");
+    printf("Make sure you use it correctry:httpclient.exe hostname/filename\r\nAssign command line arguments");
     exit(1);
   }
 
@@ -37,7 +38,6 @@ int main(int argc,char *argv[]){
     strncpy(host_name,argv[1],str_len);
     host_name[str_len]='\0';
     strcpy(file_name,uribox);
-
     printf("str_len:%d\n",str_len);
     printf("--HOSTNAME:%s\n",host_name);
     printf("--FILENAME:%s\n",file_name);
@@ -58,12 +58,10 @@ int main(int argc,char *argv[]){
   server_addr.sin_port=htons(PORT_NUMBER);
   server_addr.sin_addr.s_addr=inet_addr(host_name);
   
-
   if(server_addr.sin_addr.s_addr==-1){
       servhost=gethostbyname(host_name);
       if(servhost==NULL){
         fprintf(stderr,"Not Found Server:%s\n",host_name);
-        exit(1);
       }
       server_addr.sin_addr.s_addr=*(unsigned int *)servhost->h_addr_list[0];
   }
