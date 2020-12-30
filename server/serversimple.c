@@ -20,11 +20,15 @@ int main (){
   socklen_t addr_len;
   struct sockaddr_in my_addr, client_addr;
   char str_buf[BUFFER_SIZE];
+  char c_addr[BUFFER_SIZE];
+  char c_msg[BUFFER_SIZE];
+
   //Generate a socket
   if((csocket=socket(AF_INET,SOCK_STREAM,0))<0){
     fprintf(stderr,"Cannot create socket\n");
     exit(1);
   }
+  printf("Inirial Socket:%d\n",csocket);
   //Clear the structure
   memset((char *)&my_addr,0,sizeof(my_addr));
   //Bind setting
@@ -50,21 +54,27 @@ int main (){
     fprintf(stderr,"Cannot accept socker\n");
     exit(1);
   }
-  printf("Connected. \n");
+  printf("newSocket:%d\n",new_s);
+  printf("%x:Connected. \n",client_addr.sin_addr.s_addr);
+  sprintf(c_addr,"%s",inet_ntoa(client_addr.sin_addr));
+  printf("%s:Conected.\n",c_addr);
   //recieve a data
   if((recvbuffer=recv(new_s,str_buf,BUFFER_SIZE,0))<0){
     fprintf(stderr, "Cannot receive message\n");
     exit(1);
   }
   str_buf[recvbuffer]='\n';
+  c_msg[recvbuffer+2]='\n';
  //Return the data if the data is received
  if(recvbuffer>0){
    bufferlength=strlen(str_buf);
-   if(send(new_s,str_buf,bufferlength,0)<0){
+   sprintf(c_msg,"OK%s",str_buf);
+   if(send(new_s,c_msg,bufferlength+2,0)<0){
      fprintf(stderr, "Cannot send message\n");
      exit(1);
    }
-   printf("%s\n",str_buf);
+   
+   printf("Received Message:%s\n",str_buf);
  }
  //Receive data for close
  if((recvbuffer=recv(new_s,str_buf,BUFFER_SIZE,0))<0){
