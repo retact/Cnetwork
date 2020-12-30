@@ -18,7 +18,7 @@ hton()  Conversion to NetworkOrder//PortNumber
 
 int main(int argc,char *argv[]){
   if(argc!=3){
-    printf("Enter your Ip Address and message like this\n client 127.0.0.1 00X0000HOGEHOEGHOGE");
+    printf("Enter your Ip Address and message like this:\n client.exe 127.0.0.1 00X0000HOGEHOEGHOGE");
     exit(0);
   }
 
@@ -46,21 +46,22 @@ int main(int argc,char *argv[]){
   
   sprintf(str_buf,"%s",argv[2]);
   bufferlength=strlen(str_buf);
+  printf("SentMessage1:%s\n",str_buf);
 
   //Send a data
   if(send(csocket,str_buf,bufferlength,0)<0){
     fprintf(stderr,"Cannot send message\n");
     exit(1);
   }
-
+  printf("SentMessage2:%s\n",str_buf);
   //Recive a data
-  if((recvbuffer=recv(csocket,str_buf,bufferlength,0))<0){
+  if((recvbuffer=recv(csocket,str_buf,bufferlength+2,0))<0){
     fprintf(stderr,"Cannot receive message\n");
     exit(1);
   }else{
     if(recvbuffer>0){
       str_buf[recvbuffer]='\n';
-      printf("echo>%s",str_buf);
+      printf("ReseivedMessage:%s\n",str_buf);
     }else{
       printf("Server connection is closed\n");
       close(csocket);
